@@ -1,0 +1,5 @@
+Fork tworzy (2^n)-1 nowych procesów, gdzie n = liczba wywo³an fork()
+Dzieje siê tak poniewaz kazdy proces po wywolaniu funkcji fork() otrzymuje potomka.
+Czyli np dla n = 1 mamy 1 proces potomny.
+Dla n = 2 dwa poprzednie procesy otrzmuj¹ po 1 potomku czyli razem 3 nowe procesy
+itd..

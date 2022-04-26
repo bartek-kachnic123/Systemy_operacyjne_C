@@ -1,0 +1,75 @@
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 12.03.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog paczka_programow zawiera 5 programów w  jezyku C, oraz plików fork.txt 'drzewo genealogiczne.txt':
+--------------------------------------------------------------------
+
+I.  Program wypisuje wartości (UID, GID, PID, PPID, PGID) dla danego procesu.
+    Program sklada sie z jednego modulu: 
+    1) prog_1.c  - program glowny. 
+
+II. Program wywołuje funkcję fork 3 razy i wypisuje identikatory (UID, GID, PID, PPID, PGID)
+    procesu macierzystego oraz wszystkich procesow potomnych.
+    Program sklada sie z jednego modulu: 
+    1) prog_2.c  - program glowny. 
+
+III.Program wywołuje funkcję fork 3 razy i wypisuje identikatory (UID, GID, PID, PPID, PGID)
+    procesu macierzystego oraz wszystkich procesow potomnych. Za pomoca funkcji sleep proces
+    macierzysty kończy się pierwszy, a sieroty(pozostałe procesy potomne) zostają zaadoptowane
+    przez systemd/init.
+    1) prog_3.c  - program glowny. 
+
+IV. Program wywołuje funkcję fork 3 razy i wypisuje identikatory (UID, GID, PID, PPID, PGID)
+    procesu macierzystego oraz wszystkich procesow potomnych. Program wyświetla je
+    w kolejności od najstarszego do najmłodszego.
+    Program sklada sie z jednego modulu: 
+    1) prog_4.c  - program glowny. 
+
+V.  Program wywołuje funkcję fork 3 razy.Każdy proces potomny staje się liderem swojej własnej grupy,
+    a także  program  wypisuje identikatory (UID, GID, PID, PPID, PGID) procesu macierzystego oraz wszystkich procesow potomnych.
+    Program sklada sie z jednego modulu: 
+    1) prog_5.c  - program glowny. 
+    
+VI. Plik fork.txt zawiera odpowiedź na pytanie "Ile procesow powstanie przy n-krotnym wywolaniu funkcji fork i dlaczego?".
+    'drzewo genealogiczne.txt' zawiera przykładowe drzewo trzech wywolan funkcji fork().
+
+------------------------------------------------------------------------
+
+* Jak uruchomic programy:
+=========================
+
+Katalog zawiera program Makefile do kompilacji, linkowania
+i uruchamiania powyzszych programow, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+       make run1
+
+-> Aby uruchomic 2-szy program, nalezy wykonac komende:
+       make run2
+
+-> Aby uruchomic 3-szy program, nalezy wykonac komende:
+       make run3
+
+-> Aby uruchomic 4-szy program, nalezy wykonac komende:
+       make run4
+
+-> Aby uruchomic 5-szy program, nalezy wykonac komende:
+       make run5
+
+
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
