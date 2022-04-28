@@ -1,0 +1,69 @@
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 26.03.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog paczka_3 zawiera 3 programy w  jezyku C:
+--------------------------------------------------------------------
+
+I.    Program - ustawia obsługę sygnału na 3 sposoby zgodnie z 
+  opcją podaną jako argument wywołania programu.
+  1 - Domyslna akcja sygnalu
+  2 - Zignorowanie sygnalu
+  3 - Wlasna obsluga sygnalu
+
+    Program sklada sie z jednego modulu: 
+    1) prog_1.c  - program glowny.
+    
+II.   Program -  w procesie potomnym uruchamia program (prog_1.c), po
+   czy z procesu macierzystego wysyła do niego sygnał.
+   
+     Program sklada sie z dwoch modulow: 
+    1) prog_2.c  - program glowny.
+    2) prog_1.c - program pomocniczy
+    
+    
+III.   Program - tworzy jeden proces potomny i uruchamia w nim program
+   (prog_3_pomoc.c), który ustawia ignorowanie sygnału, staje się liderem swojej
+   grupy procesów, a następnie tworzy kilka procesów potomnych, które uruchamiają
+   program z podpunktu (prog_1.c).Pierwszy proces macierzysty  wysyła sygnał do całej grupy.
+   
+      Program sklada sie z trzech modulow: 
+    1) prog_3.c  - program glowny.
+    2) prog_3_pomoc.c - program pomocniczy
+    3) prog_1.c - program pomocniczy
+
+
+
+
+------------------------------------------------------------------------
+
+* Jak uruchomic programy:
+=========================
+
+Katalog zawiera program Makefile do kompilacji, linkowania
+i uruchamiania powyzszych programow, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+       make run1
+       
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+       make run2
+       
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+       make run3
+
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
