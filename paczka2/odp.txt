@@ -1,0 +1,2 @@
+Powstanie n procesow fork-exec dla n wywolan, poniewaz kazdy proces potomny wykonuje program przypisany
+za pomoca exec.Po wykonaniu takiego programu proces sie konczy, wiec nie utworzy kolejnych wywolan fork().
