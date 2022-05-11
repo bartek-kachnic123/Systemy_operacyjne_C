@@ -11,12 +11,14 @@ Katalog paczka_6 zawiera X programy w  jezyku C:
 I.    Przy pomocy semaforow nazwanych POSIX program realizuje wzajmne wykluczanie procesow.
        Program wypisuje odpowiednie informacje przed, w sesji krytycznej i po. W sesji procesy
        odwoluja sie do wspolnych danych. 
-
+       
+       Program sklada sie z 4 plikow:
+              1.powielacz.c - program glowny
+              2.wzajemne_wykluczanie - program dla excelp
+              3.semafor_biblio.h - plik naglowkowy biblioteki
+              4.semafor_biblio.c - definicje funkcji dla biblioteki
 
     
-
-
-
 
 ------------------------------------------------------------------------
 
