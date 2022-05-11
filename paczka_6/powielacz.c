@@ -18,7 +18,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 27.04.2022
 /*******************************************************************/
 void sig_handler(int num) // funkcja obslugujaca SIGINT
 {
-  exit(num);
+  exit(0);
 }
 /*******************************************************************/
 int main(int argc, char *argv[]) // argv[1] - nazwa programu, argv[2] - liczba procesow, argv[3] - numer.txt
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa programu, argv[2] - liczba p
         perror("excelp errror");
         _exit(2);
     }
-  }
+  } // end for
 
 
   for (i = 0; i < num_of_process; i++) // czekanie na procesy
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa programu, argv[2] - liczba p
   }
   else
   {
-    printf("Wartosc jest niepoprawna i wynosi: %d!", value);
+    printf("Wartosc jest niepoprawna i wynosi: %d!\n", value);
   }
 
   exit(0);

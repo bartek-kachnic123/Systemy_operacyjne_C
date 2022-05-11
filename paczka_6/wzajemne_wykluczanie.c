@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
     int sval; // wartosc semafora
     char pathNameFile[86]; // sciezka do pliku txt
     srand(time(NULL)); // ustawienie czasu
-    unsigned int t = rand() % 5 + 1; // czas od 1 do 5 sekund
+    unsigned int t = rand() % 3 + 1; // czas od 1 do 3 sekund
     sprintf(pathNameFile, "%s%s", PATH, argv[2]);
     sem_t *sem = otworz_semafor_nazwany(argv[1]); // adres semafora
 

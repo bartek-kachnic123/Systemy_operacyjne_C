@@ -17,7 +17,7 @@ OBJS2 = $(NAME2).o
 #------------------------------------------------------------------------------
 # dla biblioteki dzielonej
 OBJS3  = $(NAME3).o 
-LIB_NAME = MojeFunkcje
+LIB_NAME = _Semafor
 # Katalog dla bibliotek
 LIB_DIR = ./lib
 # Biblioteka dzielona linkowana dynamicznie - nazwa zalezy od systemu:
