@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
 
     /*********************************************/
                // potok nazwany fifo
-    int deskryptor_fifo = open(argv[1], O_WRONLY, 0777);
+    int deskryptor_fifo = open(argv[1], O_WRONLY, 0644);
     if (deskryptor_fifo == -1)
     {
         perror("Blad otwarcia potoku nazwanego do zapisu(producent)");
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
                     // dane.txt
     char PATHFILE_dane[86];
     sprintf(PATHFILE_dane, "%s%s", PATH, argv[2]);             
-    int deskryptor_dane = open(PATHFILE_dane, O_RDONLY, 0777);
+    int deskryptor_dane = open(PATHFILE_dane, O_RDONLY, 0644);
     /*********************************************/
     
 

@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) // 1 - potok nazwany, 2 - wyniki.txt
     unsigned int n; // losowa liczba ilosc danych
     /*********************************************/
     
-    int deskryptor_fifo = open(argv[1], O_RDONLY, 0777); // read fifo
+    int deskryptor_fifo = open(argv[1], O_RDONLY, 0644); // read fifo
     if (deskryptor_fifo == -1)
     {
         perror("Blad otwarcia pliku danych do czytania!");              // sprawdzenie czy udalo sie otworzyc pliki
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) // 1 - potok nazwany, 2 - wyniki.txt
     
     char PATHFILE_wyniki[86];
     sprintf(PATHFILE_wyniki, "%s%s", PATH, argv[2]);             // wyniki.txt
-    int deskryptor_wyniki = open(PATHFILE_wyniki, O_WRONLY, 0777);
+    int deskryptor_wyniki = open(PATHFILE_wyniki, O_WRONLY, 0644);
     /*********************************************/
     
     if (deskryptor_wyniki == -1)

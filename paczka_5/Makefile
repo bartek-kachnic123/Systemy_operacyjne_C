@@ -63,7 +63,7 @@ run1: $(EXEC1) $(EXEC2) $(EXEC3)
 	./$(EXEC1) $(EXEC2) $(EXEC3) $(FIFO) $(DANE) $(WYNIKI)
 	diff -s $(DANE) $(WYNIKI)
 run2: $(EXEC2) $(EXEC3)
-	mkfifo -m 0777 $(FIFO_2)
+	mkfifo -m 0644 $(FIFO_2)
 	xterm -hold -title PRODUCENT -e ./$(EXEC2) $(FIFO_2) $(DANE) &
 	xterm -hold -title KONSUMENT -e ./$(EXEC3) $(FIFO_2) $(WYNIKI) 
 	rm $(FIFO_2)

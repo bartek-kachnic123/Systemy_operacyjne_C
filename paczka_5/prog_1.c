@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) // 1 - producent, 2 - konsument , 3- nazwa poto
     
   
     // tworzenie fifo
-    if (mkfifo(argv[3], 0777)  == -1)
+    if (mkfifo(argv[3], 0644)  == -1)
     {
       perror("mkfifo error main");
       _exit(EXIT_FAILURE);

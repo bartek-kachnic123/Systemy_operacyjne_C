@@ -1,3 +1,15 @@
+/*
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 11.05.2022
+
+    Przy pomocy semaforow nazwanych POSIX program realizuje wzajmne wykluczanie procesow.
+    Program wypisuje odpowiednie informacje przed, w sesji krytycznej i po. W sesji procesy
+    odwoluja sie do wspolnych danych.
+      
+========================================================================
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
@@ -21,6 +33,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
     unsigned int t = rand() % 5 + 1; // czas od 1 do 5 sekund
     sprintf(pathNameFile, "%s%s", PATH, argv[2]);
     sem_t *sem = otworz_semafor_nazwany(argv[1]); // adres semafora
+
     printf("Pid procesu: %u ", getpid()); // wypisanie pid procesu
     pobierz_wartosc_semafora(sem, &sval); // pobranie wartosci semafora
     printf("PRZED SEKCJA KRYTYCZNA: %d ", sval);

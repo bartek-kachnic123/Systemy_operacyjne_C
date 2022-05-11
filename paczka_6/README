@@ -8,7 +8,9 @@ Autor: Bartłomiej Kachnic,                           Krakow, 30.04.2022
 Katalog paczka_6 zawiera X programy w  jezyku C:
 --------------------------------------------------------------------
 
-I.    
+I.    Przy pomocy semaforow nazwanych POSIX program realizuje wzajmne wykluczanie procesow.
+       Program wypisuje odpowiednie informacje przed, w sesji krytycznej i po. W sesji procesy
+       odwoluja sie do wspolnych danych. 
 
 
     
@@ -27,8 +29,7 @@ i jego archiwizacji.
 
 -> Aby uruchomic 1-szy program, nalezy wykonac komende:
        make run1
--> Aby uruchomic 2-gi program, nalezy wykonac komende:
-       make run2
+
        
 
 

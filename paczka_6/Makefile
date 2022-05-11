@@ -1,4 +1,3 @@
-
 .SUFFIXES: .c .cpp .o .x .h
 DIR = $(notdir $(CURDIR))
 SYSNAME = $(shell uname -s)
