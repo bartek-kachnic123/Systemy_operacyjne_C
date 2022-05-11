@@ -37,17 +37,17 @@ void usun_potok(void) // funkcja usuwajaca fifo przed zakonczeniem programu
 /*******************************************************/
 void sig_handler(int sig)       // do obslugi sygnalu
 {
-  exit(sig);
+  exit(0);
 }
 /*******************************************************/
 
 int main(int argc, char *argv[]) // 1 - producent, 2 - konsument , 3- nazwa potoku fifo 4 - nazwa danych, 5 -  nazwa wynikow
 
 {
-    // sprawdzania ilosci argumentow
+    // sprawdzenie ilosci argumentow
     if (argc!=6)
       {
-          perror("Wrong number of args (MAIN)");
+          perror("Wrong number of args (MAIN) ./ Example: ./prog_1 producent.x konsument.x fifo data.txt results.txt");
           _exit(EXIT_FAILURE);
       }
     
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) // 1 - producent, 2 - konsument , 3- nazwa poto
    
 
     // rejestracja funkcji usun_potok
-    fifo = argv[3]; // 
+    fifo = argv[3]; // przypisanie wskaznika globalnego do nazwy fifo
     if (atexit(usun_potok) != 0)
     {
       perror("atexit error");
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) // 1 - producent, 2 - konsument , 3- nazwa poto
     
     
     
-    // tworzenie scieziek do producenta i klienta 
+    // tworzenie sciezek do producenta i klienta 
     char PATHNAME_PRODUCENT[86];
     char PATHNAME_KONSUMENT[86];
     sprintf(PATHNAME_PRODUCENT, "%s%s", PATH, argv[1]);

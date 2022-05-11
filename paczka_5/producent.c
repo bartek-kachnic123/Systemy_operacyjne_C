@@ -15,7 +15,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 27.04.2022
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <time.h>
-#define BUFOR 10
+#define BUFOR 15
 #define PATH "./"
 
 int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
@@ -36,8 +36,11 @@ int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
     /*********************************************/
                // potok nazwany fifo
     int deskryptor_fifo = open(argv[1], O_WRONLY, 0777);
-    /*********************************************/
-
+    if (deskryptor_fifo == -1)
+    {
+        perror("Blad otwarcia potoku nazwanego do zapisu(producent)");
+        _exit(EXIT_FAILURE);
+    }
     /*********************************************/
                     // dane.txt
     char PATHFILE_dane[86];
@@ -47,17 +50,13 @@ int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
     
 
     /*********************************************/
-    if (deskryptor_dane == -1)
+    if (deskryptor_dane == -1) // sprawdzenie czy udalo sie otworzyc plikl
     {
-        perror("Blad otwarcia pliku danych do czytania!");              // sprawdzenie czy udalo sie otworzyc pliki
+        perror("Blad otwarcia pliku danych do czytania!");              
         _exit(EXIT_FAILURE);
     }
-    if (deskryptor_fifo == -1)
-    {
-        perror("Blad otwarcia potoku nazwanego do zapisu(producent)");
-        _exit(EXIT_FAILURE);
-    }
-    /*********************************************/
+    
+   
     
     
     int ile_bit; // ile bitow odczytano
@@ -83,17 +82,17 @@ int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
         if (write(STDOUT_FILENO, "Producent: ", 12) == -1)
             {
                 perror("STDOUT producent error");
-                exit(1);
+                _exit(1);
             }
         if (write(STDOUT_FILENO, buff,ile_bit) == -1)
             {
                 perror("STDOUT producent error");
-                exit(1);
+                _exit(1);
             } 
         if (write(STDOUT_FILENO, "\n", 2) == -1)
             {
                 perror("STDOUT producent error");
-                exit(1);
+                _exit(1);
             }
         sleep(t); // czekanie
         
@@ -101,8 +100,16 @@ int main(int argc, char *argv[]) // 1 - nazwa potoku nazwanego 2 - dane.txt
         //end while
     }
     
-    close(deskryptor_fifo); // zamkniecie potoku do pisania
-    close(deskryptor_dane); // zamkniecie pliku do czytania
+    if (close(deskryptor_fifo) == -1) // zamkniecie potoku do pisania
+    {
+        perror("close fifo error");
+        _exit(1);
+    } 
+    if (close(deskryptor_dane) == -1) // zamkniecie pliku do czytania
+    {
+        perror("close dane error");
+        _exit(1);
+    } 
 
     
 
