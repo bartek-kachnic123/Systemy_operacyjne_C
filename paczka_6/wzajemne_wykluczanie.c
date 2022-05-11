@@ -58,7 +58,11 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
         perror("fscanf error with file");
         _exit(EXIT_FAILURE);
     }
-    fclose(fin); // zamkniecie pliku do odczytu
+    if (fclose(fin) == -1) // zamkniecie pliku do odczytu
+    {
+        perror("fclose error with file");
+        _exit(1);
+    }
     printf("Numer z pliku : %d!", value); // wypisanie numeru na ekran
     value++; // zwiekszenie o 1 wartosci;
     sleep(t); // czekanie
@@ -74,7 +78,11 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
         perror("fprintf error with file");
         _exit(EXIT_FAILURE);
     }
-    fclose(fout); // zamkniecie pliku do zapisu
+    if (fclose(fout) == -1) // zamkniecie pliku do zapisu
+    {
+        perror("fclose error with file");
+        _exit(1);
+    }
 
     // koniec sekcji krytycznej
     /**************************************************************************/
@@ -82,13 +90,6 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
     V_sem_post(sem);
     pobierz_wartosc_semafora(sem, &sval); // pobranie wartosci semafora
     printf("\tPO SEKCJA KRYTYCZNNEJ : %d \n", sval);
-
-
-
-
-
-
-
 
 
     zwolnij_zasoby_semafora(sem); // zwolnienie zasobow

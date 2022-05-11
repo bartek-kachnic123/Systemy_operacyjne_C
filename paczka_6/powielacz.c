@@ -52,7 +52,11 @@ int main(int argc, char *argv[]) // argv[1] - nazwa programu, argv[2] - liczba p
     perror("fprintf error");
     _exit(EXIT_FAILURE);
   }
-  fclose(fp);
+  if (fclose(fp) == -1)
+  {
+    perror("fclose error with file");
+    _exit(1);
+  }
   sem_t *sem = utworz_semafor_nazwany(SEM, 1); // tworzenie semafora
   name_semaphore = SEM; // przypisanie nazwy semafora do funkcji zamykajacej
   int i; // iteracja petli
@@ -98,7 +102,11 @@ int main(int argc, char *argv[]) // argv[1] - nazwa programu, argv[2] - liczba p
     perror("cant read file");
     exit(EXIT_FAILURE);
   }
-  fclose(fp); // zamkniecie pliku do czytania
+  if (fclose(fp) == -1) // zamkniecie pliku do czytania
+  {
+      perror("fclose error with file");
+      exit(1);
+  }
   if (value == num_of_process) // sprawdzenie poprawnosci wartosci liczby z pliku txt
   {
     printf("Wartosc wpisana w pliku jest poprawna i wynosi %d!\n", value);
