@@ -14,6 +14,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 27.04.2022
 #include "semafor_biblio.h"
 #define PATH "./"
 #define SEM "semafor_1"
+#define VSEM 1
 
 /*******************************************************************/
 void sig_handler(int num) // funkcja obslugujaca SIGINT
@@ -57,7 +58,8 @@ int main(int argc, char *argv[]) // argv[1] - nazwa programu, argv[2] - liczba p
     perror("fclose error with file");
     _exit(1);
   }
-  sem_t *sem = utworz_semafor_nazwany(SEM, 1); // tworzenie semafora
+  sem_t *sem = utworz_semafor_nazwany(SEM, VSEM); // tworzenie semafora
+  printf("Adres %s = %p i wartosc = %d!\n", SEM, (void*) sem, VSEM);
   name_semaphore = SEM; // przypisanie nazwy semafora do funkcji zamykajacej
   int i; // iteracja petli
   int num_of_process = atoi(argv[2]); // liczba procesow
