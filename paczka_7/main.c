@@ -10,8 +10,6 @@
 
 
 
-
-
 int main(int argc, char *argv[]) // 1-producent, 2-konsument, 3-dane, 4- wyniki
 {
     if (argc != 5)
@@ -22,7 +20,6 @@ int main(int argc, char *argv[]) // 1-producent, 2-konsument, 3-dane, 4- wyniki
     
     sem_t *prod = utworz_semafor_nazwany(PROD, N); // semafor do wstrzymania producenta
     sem_t *kons = utworz_semafor_nazwany(KONS, 0); // semafor do wstrzymania konsumenta
-    Towar bufor[N];
     
     
     printf("Semafor %s o adresie %p i wartosci %d!\n", PROD, (void *) prod, pobierz_wartosc_semafora(prod));
