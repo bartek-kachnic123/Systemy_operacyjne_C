@@ -18,7 +18,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 11.05.2022
 #include <semaphore.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#define NELE 20
+#define NELE 10
 #define NBUF 5
 
 typedef struct 
@@ -45,8 +45,8 @@ int stworz_pamiec_dzielona(const char *name);
 int otworz_pamiec_dzielona(const char *name);
 void ustaw_dlugosc_pamieci_dzielone(int fd, off_t length);
 Towar* odzworuj_w_wirtualna_przestrzen_adr(int fd);
-void usun_odzwzorowanie_wirtualnej_przestrzeni();
+void usun_odzwzorowanie_wirtualnej_przestrzeni(Towar *addr);
 void zamknij_pamec_dzielona(int fd);
-void usun_pamiec_dzielona(const char *name);
+void usun_pamiec_dzielona(const char *shm_name);
 
 #endif // SEM_AND_SHARED_MEM_BIB

@@ -1,13 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <sys/wait.h>
 #include "sem_and_shared_mem_bib.h"
 #define SHAR_MEM "/shared_memory"
-#define SHAR_N 20
 #define PROD "prod_1"
 #define KONS "kons_1"
-#define N 20
+#define VPROD 10
+#define VKONS 0
 #define PATH "./"
 
+void sig_handler(int sig)
+{
+    exit(0);
+}
+
+void exit_handler()
+{
+    usun_semafor(PROD);
+    usun_semafor(KONS);
+    usun_pamiec_dzielona(SHAR_MEM);
+}
 
 
 int main(int argc, char *argv[]) // 1-producent, 2-konsument, 3-dane, 4- wyniki
@@ -17,19 +30,35 @@ int main(int argc, char *argv[]) // 1-producent, 2-konsument, 3-dane, 4- wyniki
         printf("Wrong numer of args! Example: ./%s producent.x konsument.x data.txt results.txt", argv[0]);
         _exit(1);
     }
+    if (atexit(exit_handler) != 0) // rejestracja funkcji atexit
+    {
+        perror("atexit function error");
+        _exit(2);
+    }
     
-    sem_t *prod = utworz_semafor_nazwany(PROD, N); // semafor do wstrzymania producenta
-    sem_t *kons = utworz_semafor_nazwany(KONS, 0); // semafor do wstrzymania konsumenta
+    sem_t *prod = utworz_semafor_nazwany(PROD, VPROD); // semafor do wstrzymania producenta
+    sem_t *kons = utworz_semafor_nazwany(KONS, VKONS); // semafor do wstrzymania konsumenta
     
     
     printf("Semafor %s o adresie %p i wartosci %d!\n", PROD, (void *) prod, pobierz_wartosc_semafora(prod));
     printf("Semafor %s o adresie %p i wartosci %d!\n", KONS, (void *) kons, pobierz_wartosc_semafora(kons));
     int sm_fd = stworz_pamiec_dzielona(SHAR_MEM); // stworzenie pamieci dzielonej
-    ustaw_dlugosc_pamieci_dzielone(sm_fd, SHAR_N);
+    ustaw_dlugosc_pamieci_dzielone(sm_fd, sizeof(Towar));
     
-    printf("Pamiec dzielona o deskryptorze %d i rozmiarze %d!\n", sm_fd, SHAR_N);
-    Towar *bufor = odzworuj_w_wirtualna_przestrzen_adr(sm_fd);
-    bufor->wstaw = bufor->wyjmij = 0;
+    printf("Pamiec dzielona o deskryptorze %d i rozmiarze %ld!\n", sm_fd, sizeof(Towar));
+
+    if (signal(SIGINT, sig_handler) == SIG_ERR)  // obsluga sygnalu SIGINT
+    {
+        perror("signal sigint error");
+        exit(1);
+    }
+
+    
+    
+    
+
+    
+    
 
     pid_t producent, konsument;
     char pathProducent[80]; // sciezka do producenta
@@ -71,25 +100,15 @@ int main(int argc, char *argv[]) // 1-producent, 2-konsument, 3-dane, 4- wyniki
     }
 
     
-    usun_semafor(PROD);
-    usun_semafor(KONS);
+    
     
     zamknij_pamec_dzielona(sm_fd);
-    usun_pamiec_dzielona(SHAR_MEM);
+    
+    
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-    return 0;
+    exit(0);
 }

@@ -50,16 +50,15 @@ void zwolnij_zasoby_semafora(sem_t *sem)
 }
 
 /*******************************************************************/
-
 void usun_semafor(const char *name)
 {
     switch(sem_unlink(name))
     {
         case -1:
             perror("sem_unlink error");
-            exit(EXIT_FAILURE);
+            _exit(EXIT_FAILURE);
         case 0:
-            printf("Pomyslnie usunieto semafor!\n");
+            printf("Pomyslnie usunieto semafor %s !\n", name);
             break;
 
     }
@@ -138,7 +137,7 @@ void ustaw_dlugosc_pamieci_dzielone(int fd, off_t length)
 
 Towar* odzworuj_w_wirtualna_przestrzen_adr(int fd)
 {
-    Towar *towar = (Towar *) mmap(NULL, sizeof(Towar), PROT_READ, MAP_SHARED, fd, 0);
+    Towar *towar = (Towar *) mmap(NULL, sizeof(Towar), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (towar == MAP_FAILED)
     {
         perror("mmap error");
@@ -147,9 +146,9 @@ Towar* odzworuj_w_wirtualna_przestrzen_adr(int fd)
     return towar;
 }
 /*******************************************************************/
-void usun_odzwzorowanie_wirtualnej_przestrzeni()
+void usun_odzwzorowanie_wirtualnej_przestrzeni(Towar *addr)
 {
-    if (munmap(NULL, sizeof(Towar)) == -1)
+    if (munmap(addr, sizeof(Towar)) == -1)
     {
         perror("munmap error");
         exit(1);
@@ -165,9 +164,9 @@ void zamknij_pamec_dzielona(int fd)
     }
 }
 /*******************************************************************/
-void usun_pamiec_dzielona(const char *name)
+void usun_pamiec_dzielona(const char *shm_name)
 {
-    switch(shm_unlink(name))
+    switch(shm_unlink(shm_name))
     {
         case -1:
             perror("shm unlink error");
