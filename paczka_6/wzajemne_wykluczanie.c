@@ -25,18 +25,19 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
         perror("wrong number of args! Example: ../programm semaphore_name file.txt num_of_cricital_section");
         _exit(EXIT_FAILURE);
     }
+
     FILE *fin, *fout; // wskazniki do funkcji fopen
     int value; // wartosc z pliku
     int sval; // wartosc semafora
-    char pathNameFile[86]; // sciezka do pliku txt
+
     srand(time(NULL)); // ustawienie czasu
-    unsigned int t = rand() % 3 + 1; // czas od 1 do 3 sekund
-    sprintf(pathNameFile, "%s%s", PATH, argv[2]);
+    unsigned int t = rand() % 2 + 1; // czas od 1 do 2 sekund
+
     sem_t *sem = otworz_semafor_nazwany(argv[1]); // adres semafora
 
     printf("Pid procesu: %u ", getpid()); // wypisanie pid procesu
     pobierz_wartosc_semafora(sem, &sval); // pobranie wartosci semafora
-    printf("PRZED SEKCJA KRYTYCZNA: %d ", sval);
+    printf("PRZED SEKCJA KRYTYCZNA SEM: %d ", sval);
     
     sleep(t); // czekanie
     P_sem_wait(sem); 
@@ -46,38 +47,45 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
     // sekcja krytyczna:
 
     pobierz_wartosc_semafora(sem, &sval); // pobranie wartosci semafora
-    printf("\tSEKCJA KRYTYCZNA %s: %d ", argv[3], sval);
-    fin = fopen(pathNameFile, "r");
-    if (!fin)
+    printf("\tSEKCJA KRYTYCZNA %s: SEM: %d ", argv[3], sval);
+
+    fin = fopen(argv[2], "r"); // otwarcie pliku do czytania
+    if (!fin) // czy udalo sie otworzyc plik txt
     {
         perror("cant read file");
         _exit(EXIT_FAILURE);
     }
+
     if (fscanf(fin, "%d", &value) < 0)  // odczytanie wartosci z pliku
     {
         perror("fscanf error with file");
         _exit(EXIT_FAILURE);
     }
+
     if (fclose(fin) == -1) // zamkniecie pliku do odczytu
     {
         perror("fclose error with file");
         _exit(1);
     }
+
     printf("Numer z pliku : %d!", value); // wypisanie numeru na ekran
     value++; // zwiekszenie o 1 wartosci;
+
     sleep(t); // czekanie
 
-    fout = fopen(pathNameFile, "w");
+    fout = fopen(argv[2], "w"); // otwarcie pliku do zapisu
     if (!fout)
     {
         perror("cant write to file");
         _exit(EXIT_FAILURE);
     }
+
     if (fprintf(fout, "%d", value) < 0) // wpisanie wartosci do pliku
     {
         perror("fprintf error with file");
         _exit(EXIT_FAILURE);
     }
+    
     if (fclose(fout) == -1) // zamkniecie pliku do zapisu
     {
         perror("fclose error with file");
@@ -89,7 +97,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
 
     V_sem_post(sem);
     pobierz_wartosc_semafora(sem, &sval); // pobranie wartosci semafora
-    printf("\tPO SEKCJA KRYTYCZNNEJ : %d \n", sval);
+    printf("\tPO SEKCJA KRYTYCZNEJ SEM : %d \n", sval);
 
 
     zwolnij_zasoby_semafora(sem); // zwolnienie zasobow
