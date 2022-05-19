@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sem_and_shared_mem_bib.h"
+#include "sem_biblio.h"
+#include "shm_biblio.h"
 #define NPROD 3
 
 int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZIELONA, 4 - DANE.txt
@@ -39,7 +40,8 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
             perror("read error Producent");
             _exit(1);
         }
-         if (ile_bajt == 0)
+
+        if (ile_bajt == 0)
         {
             printf("Koniec pracy Producenta!\n");
             memset(towarProducent->bufor[towarProducent->wstaw], '\0', NPROD);
@@ -64,15 +66,10 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
             _exit(2);
         }
     
-
-
-
-
-
     usun_odzwzorowanie_wirtualnej_przestrzeni(towarProducent);
     zwolnij_zasoby_semafora(prod);
     zwolnij_zasoby_semafora(kons);
-    zamknij_pamec_dzielona(sm_fd);
+    zamknij_pamiec_dzielona(sm_fd);
     
     return 0;
 }

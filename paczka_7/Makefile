@@ -5,24 +5,37 @@ SYSNAME = $(shell uname -s)
 NAME1 = main
 NAME2 = producent
 NAME3 = konsument
-NAME4 = sem_and_shared_mem_bib
+
+NAME5 = sem_biblio
+NAME6 = shm_biblio
 #Dane do uruchomienia programu:
 DANE = dane.txt
 WYNIKI = wyniki.txt
-# Program wykonawczy:
-EXEC1  = $(NAME1).x
-EXEC2 = $(NAME2).x
-EXEC3 = $(NAME3).x
+# Programy wykonawcze dla biblioteki statycznej:
+EXEC1S  = $(NAME1)_s.x
+EXEC2S = $(NAME2)_s.x
+EXEC3S = $(NAME3)_s.x
+# Programy wykonawcze dla biblioteki dzielonej wersja 1
+EXEC1D1  = $(NAME1)_d1.x
+EXEC2D1 = $(NAME2)_d1.x
+EXEC3D1 = $(NAME3)_d1.x
+# Programy wykonawcze dla biblioteki dzielonej wersja 2
+EXEC1D2  = $(NAME1)_d2.x
+EXEC2D2 = $(NAME2)_d2.x
+EXEC3D2 = $(NAME3)_d2.x
 # Pliki powstale po kompilacji plikow zrodlowych, tzw. object files
 OBJS1  = $(NAME1).o
 OBJS2 = $(NAME2).o
 OBJS3 = $(NAME3).o
 #------------------------------------------------------------------------------
 # dla biblioteki dzielonej
-OBJS4  = $(NAME4).o 
+OBJS5 = $(NAME5).o
+OBJS6 = $(NAME6).o
 LIB_NAME = _Sem_and_sm
 # Katalog dla bibliotek
 LIB_DIR = ./lib
+# Biblioteka statyczna (static library)
+LIB_STAT = lib$(LIB_NAME).a
 # Biblioteka dzielona linkowana dynamicznie - nazwa zalezy od systemu:
 # Linux - rozszerzenie: .so
 # macOS - rozszerzenie: .dylib
@@ -36,9 +49,10 @@ ifeq ($(SYSNAME), Darwin)
   LIB_SHAR = lib$(LIB_NAME).dylib
 endif
 # Pliki skompilowane wchodzace do biblioteki
-LIB_OBJS = $(OBJS4)
+LIB_OBJS = $(OBJS5) $(OBJS6)
 # Pliki naglowkowe
-HEADS4 =  $(NAME4).h
+HEADS5 = $(NAME5).h
+HEADS6 = $(NAME6).h
 #------------------------------------------------------------------------------
 # Opcje kompilatora i linkera; -fPIC potrzebna dla bibliotek dzielonych
 CFLAGS = -Wall -std=c99 -pedantic -O -fPIC 
@@ -66,54 +80,107 @@ ARFLAGS = rsv
 	$(CO) $(CFLAGS) -c $<
 
 ###############################################################################
-
+# Tworzenie bibliteki statycznej
+$(LIB_STAT): $(LIB_OBJS)
+	$(AR) $(ARFLAGS) $@ $?
+	mkdir -p $(LIB_DIR)
+	mv $(LIB_STAT) $(LIB_DIR)
 ###############################################################################
 # Tworzenie biblioteki dzielonej (shared library)
 $(LIB_SHAR): $(LIB_OBJS)
 # Linux - opcja linkera: -shared
 ifeq ($(SYSNAME), Linux)
-	$(LD) -shared -o $@ $(LFLAGS) $(LIB_OBJS)
+	$(LD) -shared -o $@ $(CFLAGS) $(LIB_OBJS)
 endif
 # macOS - opcje linkera: -dynamiclib,  -install_name @rpath/$(LIB_DIR)/$@
 ifeq ($(SYSNAME), Darwin)
-	$(LD) -dynamiclib -o $@ $(LFLAGS) $(LIB_OBJS) -install_name @rpath/$(LIB_DIR)/$@
+	$(LD) -dynamiclib -o $@ $(CFLAGS) $(LIB_OBJS) -install_name @rpath/$(LIB_DIR)/$@
 endif
 	mkdir -p $(LIB_DIR)
 	mv $(LIB_SHAR) $(LIB_DIR)
 ###############################################################################
+# Plik wykonawczy z biblioteka statyczna
+$(EXEC1S): $(OBJS1) $(LIB_STAT)
+	rm -f $(LIB_DIR)/$(LIB_SHAR)
+	$(LD) -o $@ $(LFLAGS) $(OBJS1) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
+$(EXEC2S): $(OBJS2) $(LIB_STAT)
+	$(LD) -o $@ $(LFLAGS) $(OBJS2) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
+$(EXEC3S): $(OBJS3) $(LIB_STAT)
+	$(LD) -o $@ $(LFLAGS) $(OBJS3) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
+###############################################################################	
+#  Plik wykonawczy z biblioteka dzielona - wersja 1
+#  -> informacja o lokalizacji bibliteki przekazywana jest przez opcje linkera:
+#     -Wl,-R $(LIB_DIR)  (zamiast -R mozna uzyc -rpath) dla Linuksa.       
+$(EXEC1D1): $(OBJS1) $(LIB_SHAR)
+ifeq ($(SYSNAME), Linux)
+	$(LD) -o $@ $(CFLAGS) $(OBJS1) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS) -Wl,-R $(LIB_DIR)
+endif
+# macOS: opcje -Xlinker -rpath -Xlinker $(CURDIR)
+ifeq ($(SYSNAME), Darwin)
+	$(LD) -o $@ $(CFLAGS) $(OBJS1) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS) -Xlinker -rpath -Xlinker $(CURDIR)
+endif
+$(EXEC2D1): $(OBJS2) $(LIB_SHAR)
+ifeq ($(SYSNAME), Linux)
+	$(LD) -o $@ $(CFLAGS) $(OBJS2) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS) -Wl,-R $(LIB_DIR)
+endif
+# macOS: opcje -Xlinker -rpath -Xlinker $(CURDIR)
+ifeq ($(SYSNAME), Darwin)
+	$(LD) -o $@ $(CFLAGS) $(OBJS2) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS) -Xlinker -rpath -Xlinker $(CURDIR)
+endif
+$(EXEC3D1): $(OBJS3) $(LIB_SHAR)
+ifeq ($(SYSNAME), Linux)
+	$(LD) -o $@ $(CFLAGS) $(OBJS3) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS) -Wl,-R $(LIB_DIR)
+endif
+# macOS: opcje -Xlinker -rpath -Xlinker $(CURDIR)
+ifeq ($(SYSNAME), Darwin)
+	$(LD) -o $@ $(CFLAGS) $(OBJS3) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS) -Xlinker -rpath -Xlinker $(CURDIR)
+endif
+###############################################################################	
 #-------------------------------------------------------------------------------------------------
 #  Plik wykonawczy z biblioteka dzielona - wersja 2
 #  -> informacja o lokalizacji biblioteki nie jest przekazywana przez opcje 
 #     linkera, lecz na etapie wykonania przez zmienna srodowiskowa:
 #     LD_LIBRARY_PATH (patrz ponizej na przyklad uruchomienia programu).
-$(EXEC1): $(OBJS1) $(LIB_SHAR)
-	$(LD) -o $@ $(LFLAGS) $(OBJS1) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
-$(EXEC2): $(OBJS2) $(LIB_SHAR)
-	$(LD) -o $@ $(LFLAGS) $(OBJS2) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
-$(EXEC3): $(OBJS3) $(LIB_SHAR)
-	$(LD) -o $@ $(LFLAGS) $(OBJS3) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
+$(EXEC1D2): $(OBJS1) $(LIB_SHAR)
+	$(LD) -o $@ $(CFLAGS) $(OBJS1) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
+$(EXEC2D2): $(OBJS2) $(LIB_SHAR)
+	$(LD) -o $@ $(CFLAGS) $(OBJS2) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
+$(EXEC3D2): $(OBJS3) $(LIB_SHAR)
+	$(LD) -o $@ $(CFLAGS) $(OBJS3) -L$(LIB_DIR) -l$(LIB_NAME) $(PDLIBS) $(SHLIBS)
 
 ###############################################################################
 # Dodatkowe reguly zaleznosci plikow objectowych od naglowkowych, ktorych
 # nie uwglednia regula wzorcowa (powyzej).
 ###############################################################################
-$(OBJS1): $(HEADS4)
-$(OBJS2): $(HEADS4)
-$(OBJS3): $(HEADS4)
+$(OBJS1): $(HEADS5) $(HEADS6)
+$(OBJS2): $(HEADS5) $(HEADS6)
+$(OBJS3): $(HEADS5) $(HEADS6)
 
 ###############################################################################
-.PHONY: run1
-###############################################################################  
-run1: $(EXEC1) $(EXEC2) $(EXEC3)
+.PHONY: run1s run1d1 run1d2
+############################################################################### 
+# z biblioteka statyczna:
+run1s: $(EXEC1S) $(EXEC2S) $(EXEC3S)
+	./$(EXEC1S) $(EXEC2S) $(EXEC3S) $(DANE) $(WYNIKI)
+	diff -s $(DANE) $(WYNIKI) 
+############################################################################### 
+#  z biblioteka dzielona  wersja 1:
+run1d1: $(EXEC1D1) $(EXEC2D1) $(EXEC3D1)
+	./$(EXEC1D1) $(EXEC2D1) $(EXEC3D1) $(DANE) $(WYNIKI)
+	diff -s $(DANE) $(WYNIKI) 
+# z biblioteka dzielona wersja 2:
+run1d2: $(EXEC1D2) $(EXEC2D2) $(EXEC3D2)
 # Linux
 ifeq ($(SYSNAME), Linux)
 	export LD_LIBRARY_PATH=${LIB_DIR}:${LD_LIBRARY_PATH}; \
-	./$(EXEC1) $(EXEC2) $(EXEC3) $(DANE) $(WYNIKI)
+	./$(EXEC1D2) $(EXEC2D2) $(EXEC3D2) $(DANE) $(WYNIKI)
+	diff -s $(DANE) $(WYNIKI)
 endif
 # macOS - tu odpowiednia zmienna srodowiskowa to: DYLD_LIBRARY_PATH
 ifeq ($(SYSNAME), Darwin)
 	export DYLD_LIBRARY_PATH=${LIB_DIR}:${LD_LIBRARY_PATH}; \
-	./$(EXEC1) $(EXEC2) $(EXEC3) $(DANE) $(WYNIKI)
+	./$(EXEC1D2) $(EXEC2D2) $(EXEC3D2) $(DANE) $(WYNIKI)
+	diff -s $(DANE) $(WYNIKI)
 endif
 ###############################################################################
 # Sprzataczka (tez "phony target")
