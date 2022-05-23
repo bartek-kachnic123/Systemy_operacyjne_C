@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "sem_biblio.h"
 #include "shm_biblio.h"
 #define NPROD 3
