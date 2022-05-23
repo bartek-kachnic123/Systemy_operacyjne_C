@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
         if (ile_bajt == 0)
         {
             printf("Koniec pracy Producenta!\n");
-            memset(towarProducent->bufor[towarProducent->wstaw], '\0', NPROD);
+            towarProducent->bufor[towarProducent->wstaw][0] = '\0'; // przeslanie znaku konca pliku
             break;
         }
         printf("P: wartosc %s: %d, wartosc %s %d!\t", argv[1], pobierz_wartosc_semafora(prod), argv[2], pobierz_wartosc_semafora(kons));
