@@ -5,7 +5,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 30.04.2022
 * Zawartosc:
 ============
 
-Katalog paczka_6 zawiera X programy w  jezyku C:
+Katalog paczka_6 zawiera 1 program w  jezyku C:
 --------------------------------------------------------------------
 
 I.    Przy pomocy semaforow nazwanych POSIX program realizuje wzajmne wykluczanie procesow.
