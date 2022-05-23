@@ -17,11 +17,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
 
     printf("Producent: %s %p, %s %p, Deskryptor pamieci dzielonej: %d!\n", argv[1], (void*) prod, argv[2], (void *) kons, sm_fd);
     Towar *towarProducent = odzworuj_w_wirtualna_przestrzen_adr(sm_fd);
-    if (towarProducent == MAP_FAILED)
-    {
-        perror("mmap error Konsument");
-        _exit(1);
-    }
+    
 
     int fd; // deskryptor dla pliku
     fd = open(argv[4], O_RDONLY); // otwarcie pliku do czytania
