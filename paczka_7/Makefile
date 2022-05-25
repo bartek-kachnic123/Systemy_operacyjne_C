@@ -54,9 +54,9 @@ LIB_OBJS = $(OBJS5) $(OBJS6)
 HEADS5 = $(NAME5).h
 HEADS6 = $(NAME6).h
 #------------------------------------------------------------------------------
-# Opcje kompilatora i linkera; -fPIC potrzebna dla bibliotek dzielonych
-CFLAGS = -Wall -std=c99 -pedantic -O -fPIC 
-LFLAGS = -Wall -std=c99 -pedantic -O 
+# Opcje kompilatora i linkera; -fPIC potrzebna dla bibliotek dzielonych; -D_XOPEN_SOURCE=500 dla ftruncate()
+CFLAGS = -Wall -std=c99 -pedantic -O -fPIC -D_XOPEN_SOURCE=500
+LFLAGS = -Wall -std=c99 -pedantic -O -D_XOPEN_SOURCE=500
 # Biblioteki linkera zainstalowane w systemie 
 # (tu: biblioteka semaforow)
 PDLIBS = -pthread
