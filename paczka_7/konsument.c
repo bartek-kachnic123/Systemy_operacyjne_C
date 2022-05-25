@@ -2,8 +2,8 @@
 ========================================================================
 Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
 
-    Producent pobiera dane z pliku txt i zapisuje je w pamieci dzielonej
-    (buforze cyklicznym).
+    Konsument pobiera dane z pamieci dzielonej(bufora cyklicznego) i
+    zapisuje je w pliku txt.
       
 ========================================================================
 */
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
     //wypisanie nazwy semaforow i ich adresow
     printf("Konsument: %s %p, %s %p, Deskryptor pamieci dzielonej: %d!\n", argv[1], (void*) prod, argv[2], (void *) kons, sm_fd);
     
-    Towar *towarKonsument = odzworuj_w_wirtualna_przestrzen_adr(sm_fd); 
+    Towar *towarKonsument = odzwzoruj_w_wirtualna_przestrzen_adr(sm_fd); 
     
 
     int fd; // deskryptor dla pliku
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
         
         if (ile_bajt == -1)
         {
-            perror("read error Producent");
+            perror("read error Konsument");
             _exit(1);
         }
        

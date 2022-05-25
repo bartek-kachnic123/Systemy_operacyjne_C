@@ -41,7 +41,7 @@ int otworz_pamiec_dzielona(const char *name);
 void ustaw_dlugosc_pamieci_dzielone(int fd, off_t length);
 
 // odwzorywuje strukture towar w wirtualna przestrzen pamieci dzielonej o deskryptorze fd i zwraca adres Towaru
-Towar* odzworuj_w_wirtualna_przestrzen_adr(int fd);
+Towar* odzwzoruj_w_wirtualna_przestrzen_adr(int fd);
 
 // usuwa odzwzorowanie wirtualnej przestrzeni z pamieci dzielonej Towaru
 void usun_odzwzorowanie_wirtualnej_przestrzeni(Towar *addr);

@@ -1,3 +1,15 @@
+/*
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
+
+    Konsument pobiera dane z pliku txt i zapisuje je w pamieci dzielonej
+    (buforze cyklicznym).
+      
+========================================================================
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "sem_biblio.h"
@@ -16,7 +28,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
     int sm_fd = otworz_pamiec_dzielona(argv[3]); // deskryptor pamieci dzielonej
 
     printf("Producent: %s %p, %s %p, Deskryptor pamieci dzielonej: %d!\n", argv[1], (void*) prod, argv[2], (void *) kons, sm_fd);
-    Towar *towarProducent = odzworuj_w_wirtualna_przestrzen_adr(sm_fd);
+    Towar *towarProducent = odzwzoruj_w_wirtualna_przestrzen_adr(sm_fd);
     
 
     int fd; // deskryptor dla pliku
@@ -38,7 +50,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
 
         if (ile_bajt == 0)
         {
-            printf("Koniec pracy Producenta!\n");
+            printf("Koniec pracy PRODUCENTA!\n");
             towarProducent->bufor[towarProducent->wstaw][0] = '\0'; // przeslanie znaku konca pliku
             break;
         }

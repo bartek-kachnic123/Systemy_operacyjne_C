@@ -35,7 +35,7 @@ void ustaw_dlugosc_pamieci_dzielone(int fd, off_t length)
 
 /*******************************************************************/
 
-Towar* odzworuj_w_wirtualna_przestrzen_adr(int fd)
+Towar* odzwzoruj_w_wirtualna_przestrzen_adr(int fd)
 {
     Towar *towar = (Towar *) mmap(NULL, sizeof(Towar), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (towar == MAP_FAILED)
