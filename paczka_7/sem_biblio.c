@@ -20,7 +20,7 @@ void usun_semafor_nienazwany(sem_t *sem)
 /*******************************************************************/
 sem_t *utworz_semafor_nazwany(const char *name, int value)
 {
-    sem_t * adr = sem_open(name, O_CREAT | O_EXCL, 0777, value);
+    sem_t * adr = sem_open(name, O_CREAT | O_EXCL, 0644, value);
     if (adr == SEM_FAILED)
     {
         perror("sem_open error");
