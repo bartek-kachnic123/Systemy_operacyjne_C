@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
     printf("PRZED SEKCJA KRYTYCZNA SEM: %d ", sval);
     
     sleep(t); // czekanie
-    P_sem_wait(sem); 
+    //P_sem_wait(sem); 
     sleep(t); // czekanie
 
    /**************************************************************************/
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) // argv[1] - nazwa semafora, argv[2] - file.txt
     // koniec sekcji krytycznej
     /**************************************************************************/
 
-    V_sem_post(sem);
+    //V_sem_post(sem);
     pobierz_wartosc_semafora(sem, &sval); // pobranie wartosci semafora
     printf("\tPO SEKCJA KRYTYCZNEJ SEM : %d \n", sval);
 

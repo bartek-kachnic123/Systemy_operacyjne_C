@@ -21,6 +21,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
 #define NELE 10
 #define NBUF 5
 
+// struktura dla pamieci dzielonej Towar
 typedef struct 
 {
     char bufor[NELE][NBUF];
@@ -29,12 +30,26 @@ typedef struct
 
 
 // shared memory
+
+// tworzy pamiec dzielona o nazwie name i zwraca deskryptor
 int stworz_pamiec_dzielona(const char *name);
+
+// otwiera pamiec dzielona o nazwie name i zwraca deskryptor
 int otworz_pamiec_dzielona(const char *name);
+
+// ustawia dlugosc pamieci dzielonej o deskryptorze fd na lenght
 void ustaw_dlugosc_pamieci_dzielone(int fd, off_t length);
+
+// odwzorywuje strukture towar w wirtualna przestrzen pamieci dzielonej o deskryptorze fd i zwraca adres Towaru
 Towar* odzworuj_w_wirtualna_przestrzen_adr(int fd);
+
+// usuwa odzwzorowanie wirtualnej przestrzeni z pamieci dzielonej Towaru
 void usun_odzwzorowanie_wirtualnej_przestrzeni(Towar *addr);
+
+// zamyka pamiec dzielona o deskryptorze fd
 void zamknij_pamiec_dzielona(int fd);
+
+// usuwa pamiec dzielona o nazwie shm_name
 void usun_pamiec_dzielona(const char *shm_name);
 
 

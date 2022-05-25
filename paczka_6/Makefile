@@ -6,7 +6,7 @@ NAME1 = powielacz
 NAME2 = wzajemne_wykluczanie
 NAME3 = semafor_biblio
 #Dane do uruchomienia programu:
-LICZBA_PROCESOW = 5
+LICZBA_PROCESOW = 10
 PLIK = numer.txt
 # Program wykonawczy:
 EXEC1  = $(NAME1).x

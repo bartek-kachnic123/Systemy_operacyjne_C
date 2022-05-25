@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
        
        //wypisanie wartosci semaforow
         printf("K: wartosc %s: %d, wartosc %s %d!\t", argv[1], pobierz_wartosc_semafora(prod), argv[2], pobierz_wartosc_semafora(kons));
-        printf("K: Indeks elementu bufora: %d, liczba wstawionych bajtow: %d, tekst: %s\n", towarKonsument->wyjmij, ile_bajt,towarKonsument->bufor[towarKonsument->wyjmij]);
+        printf("K: Indeks elementu bufora: %d, liczba pobranych bajtow: %d, tekst: %s\n", towarKonsument->wyjmij, ile_bajt,towarKonsument->bufor[towarKonsument->wyjmij]);
         sleep(2);
         
         
