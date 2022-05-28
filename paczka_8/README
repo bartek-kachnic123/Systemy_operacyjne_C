@@ -1,0 +1,58 @@
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog paczka_6 zawiera X programy w  jezyku C:
+--------------------------------------------------------------------
+
+I.      Program realizuje problem Konsumenta-Producenta. Tworzy 2 procesy
+       potomne, z ktorych Producent pobiera dane z pliku dane.txt i zapisuje je
+       w utworzonej przez program glowny pamieci dzielonej(bufor cykliczny).
+       Natomiast drugi proces Konsument pobiera dane z pamieci i zapisuje
+       je do pliku wyniki.txt.
+       
+       Program sklada sie z 3 plikow w jezyku c, 2 modulow i 2 plikow txt:
+            1) main.c - program glowny
+            2) producent.c - program producenta
+            3) konsument.c - program konsumenta
+            4) sem_biblio.h, sem_biblio.c - modul biblioteki semaforow
+            4) shm_biblio.h, shm_biblio.c - modul biblioteki pamieci dzielonej
+            5) dane.txt, wyniki.txt - pliki tekstowe z danymi i wynikami
+             
+
+    
+
+------------------------------------------------------------------------
+
+* Jak uruchomic programy:
+=========================
+
+Katalog zawiera program Makefile do kompilacji, linkowania
+i uruchamiania powyzszych programow, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+   a) dla biblioteki statycznej (static library; patrz Makefile):
+      make run1s
+   b) dla biblioteki dzielonej (shared library; patrz Makefile):
+    1) wersja 1:
+      make run1d1
+    2) wersja 2:
+      make run1d2
+
+       
+
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
