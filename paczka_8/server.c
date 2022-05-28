@@ -40,15 +40,72 @@ int main()
     printf("Nazwa kolejki: %s, deskryptor: %d oraz atrybuty:\n", MQUEUE_SERVER, mqdes);
     printf("flags: %ld, maxmsg: %ld, maxsize: %ld, curmsgs: %ld!\n", attr.mq_flags, attr.mq_maxmsg, attr.mq_msgsize, attr.mq_curmsgs);
 
-    char msg[MQ_MSGSIZE]; // wiadomosc od klienta
+    char msg[MQ_MSGSIZE]; // wiadomosc 
+    mqd_t mq_client_desc; // deskryptor kolejki klienta
+    char client_pid[20];
+    int num1, num2; 
+    char operator;
+    int result;
+    int is_operator = 1; // 1 - operator jest w zbiorze {+,-,*,/}
     while(1)
     {
         // odbieranie wiadomosci
         receive_msg(mqdes, msg, MQ_MSGSIZE);
+        // wypisanie wiadomosci
         
-        fflush(stdout);
-        printf("Message from client: %s", msg);
+        printf("From client: %s", msg);
+
+        // wyciaganie danych z wiadomosci
+        sscanf(msg,"%s %d%c%d", client_pid, &num1, &operator, &num2);
+
+        // obliczanie wyniku
+        if (operator == '/' && num2 == 0) // dzielenie przez 0;
+        {
+            sprintf(msg, "Nie wolno dzielic przez 0!");
+        }
+        else
+        {
+           switch (operator)
+            {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    result = num1 / num2;
+                    break;
+                default:
+                    is_operator = 0;
+                    break;
+            }
+
+            if (is_operator)
+            {
+                sprintf(msg, "%d", result);
+            }
+            else 
+            {
+                sprintf(msg, "Operator nie znajduje sie w zbiorze dostenych operacji {+,-,*,/");
+            }
+        } // end if
+
+       // otworzenie kolejki klienta
+       mq_client_desc = open_mqueue(client_pid);
+
+       // wyslanie wiadomosci
+
+
+       // zamkniecie kolejki klienta
+       close_mqueue(mq_client_desc);
+
         
+        
+    
     } // petla nieskonczona
 
 
