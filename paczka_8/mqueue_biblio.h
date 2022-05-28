@@ -31,4 +31,11 @@ struct mq_attr getattr_mqueue(mqd_t mqdes);
 // funkcja ustawiajaca atrybut mq_flags
 void setattr_mqueue(mqd_t mqdes, long mq_flags);
 
+// funkcja wysyla wiadomosc msg o dlugosci msg_len i priotytecie msg_prio do kolejki o deskryptorze mqdes
+void send_msg(mqd_t mqdes, const char *msg, size_t msg_len, int msg_prio);
+
+// funkcja zapisuje wiadomosc z kolejki o deskryptorze mqdes do bufora msg o dlugosci msg_len
+void receive_msg(mqd_t mqdes, char *msg, size_t msg_len);
+  
+
 #endif

@@ -73,7 +73,21 @@ void setattr_mqueue(mqd_t mqdes, long mq_flags)
 }
 //========================================================================
 
-
+void send_msg(mqd_t mqdes, const char *msg, size_t msg_len, int msg_prio)
+{
+    if (mq_send(mqdes, msg, msg_len, msg_prio) == -1)
+    {
+        perror("mq_send error");
+        exit(EXIT_FAILURE);
+    }
+}
 
 //========================================================================
-
+void receive_msg(mqd_t mqdes, char *msg, size_t msg_len)
+{
+    if (mq_receive(mqdes, msg, msg_len, NULL) == -1)
+    {
+        perror("mq_receive erorr");
+        exit(EXIT_FAILURE);
+    }
+}
