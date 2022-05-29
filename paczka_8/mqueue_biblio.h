@@ -9,7 +9,7 @@
 #include <unistd.h>
 #define MQUEUE_SERVER "/queue_server"
 #define MQ_MAXMSG 10
-#define MQ_MSGSIZE 80
+#define MQ_MSGSIZE 100
 
 
 

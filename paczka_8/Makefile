@@ -75,6 +75,7 @@ $(OBJS2): $(HEADS4)
 run1: $(EXEC1) $(EXEC2)
 	xterm -hold -title $(NAME1) -bg red -e ./$(EXEC1) &
 	xterm -hold -title $(NAME2)1 -bg green -e ./$(EXEC2) &
+	xterm -hold -title $(NAME2)2 -bg green -e ./$(EXEC2) &
 
 
 ###############################################################################

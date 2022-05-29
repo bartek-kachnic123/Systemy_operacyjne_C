@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
         // pobranie wiadomosci
         if (fgets(bufor, NBUF, stdin) == NULL) break; 
         fflush(stdout);
+        fflush(stdin);
         // otwarcie kolejki
         mq_server_des = open_mqueue(MQUEUE_SERVER);
         
@@ -44,15 +45,20 @@ int main(int argc, char *argv[])
         // wyslanie wiadomosci
         send_msg(mq_server_des, msg, MQ_MSGSIZE, 0);
 
+        sleep(1); // czekanie
 
-        // fflush(stdout);
+
+        
         // printf("%s", bufor);
 
         // zamkniecie kolejki serwera
         close_mqueue(mq_server_des);
-
+        
 
         // odbieranie wiadomosci z serwera
+        receive_msg(mq_client_des, msg, MQ_MSGSIZE);
+        printf("Message from server : %s \n", msg);
+        
 
 
     }

@@ -56,7 +56,11 @@ int main()
         printf("From client: %s", msg);
 
         // wyciaganie danych z wiadomosci
-        sscanf(msg,"%s %d%c%d", client_pid, &num1, &operator, &num2);
+        if (sscanf(msg,"%s %d%c%d", client_pid, &num1, &operator, &num2) != 4)
+        {
+            perror("sscanf error");
+            exit(1);
+        }
 
         // obliczanie wyniku
         if (operator == '/' && num2 == 0) // dzielenie przez 0;
@@ -86,18 +90,25 @@ int main()
 
             if (is_operator)
             {
-                sprintf(msg, "%d", result);
+                sprintf(msg, "Result: %d", result);
+                
             }
             else 
             {
-                sprintf(msg, "Operator nie znajduje sie w zbiorze dostenych operacji {+,-,*,/");
+                sprintf(msg, "Operator nie znajduje sie w zbiorze dostepnych operacji {+,-,*,/");
             }
         } // end if
-
+        // wypisanie wyniku
+        printf("%s", msg);
+    
        // otworzenie kolejki klienta
        mq_client_desc = open_mqueue(client_pid);
 
-       // wyslanie wiadomosci
+
+       // wyslanie odpowiedzi do klienta
+       send_msg(mq_client_desc, msg, MQ_MSGSIZE, 0);
+       sleep(1);
+       
 
 
        // zamkniecie kolejki klienta
@@ -106,7 +117,7 @@ int main()
         
         
     
-    } // petla nieskonczona
+    } // end while 
 
 
     close_mqueue(mqdes); // zamknij kolejke
