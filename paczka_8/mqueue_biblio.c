@@ -30,7 +30,7 @@ void close_mqueue(mqd_t mqdes)
     if (mq_close(mqdes) == -1)
     {
         perror("mq_close error");
-        exit(EXIT_FAILURE);
+        _exit(EXIT_FAILURE);
     }
 }
 //========================================================================

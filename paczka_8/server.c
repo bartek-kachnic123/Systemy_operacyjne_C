@@ -47,6 +47,7 @@ int main()
     char operator;
     int result;
     int is_operator = 1; // 1 - operator jest w zbiorze {+,-,*,/}
+    int msg_len = 0;
     while(1)
     {
         // odbieranie wiadomosci
@@ -54,18 +55,21 @@ int main()
         // wypisanie wiadomosci
         
         printf("From client: %s", msg);
+       
+        
 
         // wyciaganie danych z wiadomosci
-        if (sscanf(msg,"%s %d%c%d", client_pid, &num1, &operator, &num2) != 4)
+        if (sscanf(msg,"%s %d %c %d", client_pid, &num1, &operator, &num2) != 4)
         {
-            perror("sscanf error");
-            exit(1);
-        }
+            sprintf(msg, "Zle wprowadzone dzialanie!\n");
 
+        }
+        else 
+        {
         // obliczanie wyniku
         if (operator == '/' && num2 == 0) // dzielenie przez 0;
         {
-            sprintf(msg, "Nie wolno dzielic przez 0!");
+            sprintf(msg, "Nie wolno dzielic przez 0!\n");
         }
         else
         {
@@ -90,24 +94,27 @@ int main()
 
             if (is_operator)
             {
-                sprintf(msg, "Result: %d", result);
+                sprintf(msg, "Result: %d\n", result);
                 
             }
             else 
             {
-                sprintf(msg, "Operator nie znajduje sie w zbiorze dostepnych operacji {+,-,*,/");
+                sprintf(msg, "Operator nie znajduje sie w zbiorze dostepnych operacji {+,-,*,/}\n");
             }
+        }
         } // end if
         // wypisanie wyniku
-        printf("%s", msg);
+        while(msg[msg_len++]!='\0');
+        write(STDOUT_FILENO, msg, msg_len);
+        msg_len = 0;
+        
+        
     
        // otworzenie kolejki klienta
        mq_client_desc = open_mqueue(client_pid);
-
-
        // wyslanie odpowiedzi do klienta
-       send_msg(mq_client_desc, msg, MQ_MSGSIZE, 0);
-       sleep(1);
+       send_msg(mq_client_desc, msg, MQ_MSGSIZE, 1);
+       
        
 
 
