@@ -47,7 +47,6 @@ int main()
     char operator;
     int result;
     int is_operator = 1; // 1 - operator jest w zbiorze {+,-,*,/}
-    int msg_len = 0;
     while(1)
     {
         // odbieranie wiadomosci
@@ -55,6 +54,7 @@ int main()
         // wypisanie wiadomosci
         
         printf("From client: %s", msg);
+        fflush(stdout);
        
         
 
@@ -104,10 +104,7 @@ int main()
         }
         } // end if
         // wypisanie wyniku
-        while(msg[msg_len++]!='\0');
-        write(STDOUT_FILENO, msg, msg_len);
-        msg_len = 0;
-        
+        printf("Server: %s", msg);
         
     
        // otworzenie kolejki klienta
