@@ -18,13 +18,13 @@ Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
 #include <semaphore.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#define NELE 10
-#define NBUF 5
+#define NELE 5
+#define NBUF 10
 
 // struktura dla pamieci dzielonej Towar
 typedef struct 
 {
-    char bufor[NELE][NBUF];
+    char bufor[NBUF][NELE];
     int wstaw, wyjmij;
 } Towar;
 

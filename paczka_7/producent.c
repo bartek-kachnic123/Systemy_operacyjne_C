@@ -14,7 +14,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
 #include <stdlib.h>
 #include "sem_biblio.h"
 #include "shm_biblio.h"
-#define NPROD 3
+#define NPROD NELE - 1
 
 int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZIELONA, 4 - DANE.txt
 {
@@ -35,7 +35,8 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
     fd = open(argv[4], O_RDONLY); // otwarcie pliku do czytania
     int ile_bajt; // ile bajtow pobrano
     towarProducent->wstaw = 0;
-    while(1)
+    int run = 1; // petla
+    while(run)
     {
         P_sem_wait(prod); // opusc semafor Producenta
         // STREFA KRYTYCZNA
@@ -48,19 +49,20 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
             perror("read error Producent");
             _exit(1);
         }
-
-        if (ile_bajt == 0)
+        if (ile_bajt <  NPROD)
         {
-            printf("Koniec pracy PRODUCENTA!\n");
-            towarProducent->bufor[towarProducent->wstaw][0] = '\0'; // przeslanie znaku konca pliku
-            break;
+            towarProducent->bufor[towarProducent->wstaw][ile_bajt] = '\0'; // przeslanie znaku konca pliku
+            run = 0; // wyjscie z petli
         }
+
+        
         printf("P: wartosc %s: %d, wartosc %s %d!\t", argv[1], pobierz_wartosc_semafora(prod), argv[2], pobierz_wartosc_semafora(kons));
         printf("P: Indeks elementu bufora: %d, liczba wstawionych bajtow: %d, tekst: %s\n", towarProducent->wstaw, ile_bajt,towarProducent->bufor[towarProducent->wstaw]);
         sleep(1);
+
         
-        towarProducent->wstaw = (towarProducent->wstaw + 1) % NELE; // zmiana pozycji w buforze
-       
+        
+        towarProducent->wstaw = (towarProducent->wstaw + 1) % NBUF; // zmiana pozycji w buforze
        
         /*************************************************************************/
         V_sem_post(kons); // podnies semfaor Konsumenta
@@ -73,11 +75,14 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
             perror("close file error (read)");
             _exit(2);
         }
+
     
     usun_odzwzorowanie_wirtualnej_przestrzeni(towarProducent);
     zwolnij_zasoby_semafora(prod);
     zwolnij_zasoby_semafora(kons);
     zamknij_pamiec_dzielona(sm_fd);
+
+    printf("Koniec pracy PRODUCENTA!\n");
     
     return 0;
 }

@@ -21,7 +21,7 @@ Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
 #define SHAR_MEM "/shared_memory"
 #define PROD "prod_1"
 #define KONS "kons_1"
-#define VPROD NELE
+#define VPROD NBUF
 #define VKONS 0
 #define PATH "./"
 

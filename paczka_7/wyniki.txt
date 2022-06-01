@@ -1,1 +1,1 @@
-Przykladowe dane do wyslania z pliku dane.txt do wyniki.txt.
+Przykladowe dane do wyslania z pliku dane.txt do wyniki.txt12.

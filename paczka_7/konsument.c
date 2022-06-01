@@ -13,7 +13,20 @@ Autor: Bartłomiej Kachnic,                           Krakow, 19.05.2022
 #include <stdlib.h>
 #include "sem_biblio.h"
 #include "shm_biblio.h"
-#define NKONS 3
+#define NKONS NELE - 1
+
+int check_if_end(char * buff, int * run)
+{
+    for (int i = 0; i < NKONS; i++)
+    {
+        if (buff[i] == '\0') 
+        {
+            *run = 0;
+            return i;
+        }
+    }
+    return NKONS;
+}
 
 int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZIELONA, 4 - WYNIKI.txt
 {
@@ -37,14 +50,14 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
     fd = open(argv[4], O_WRONLY); // otwarcie pliku do pisania
     int ile_bajt; // ile odczytano
     towarKonsument->wyjmij = 0;
-    while(1)
+    int run = 1; // petla
+    while(run)
     {
         P_sem_wait(kons); // opusc semafor konsumenta
         sleep(1);
         // STREFA KRYTYCZNA
         /*************************************************************************/
-        
-        ile_bajt = write(fd, towarKonsument->bufor[towarKonsument->wyjmij], NKONS); // zapisanie do bufora
+        ile_bajt = write(fd, towarKonsument->bufor[towarKonsument->wyjmij], check_if_end(towarKonsument->bufor[towarKonsument->wyjmij], &run)); // zapisanie do bufora
         
         if (ile_bajt == -1)
         {
@@ -58,17 +71,14 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
         sleep(2);
         
         
-        towarKonsument->wyjmij = (towarKonsument->wyjmij + 1) % NELE; // zmiana pozycji w buforze
-        if (towarKonsument->bufor[towarKonsument->wyjmij][0] == '\0')
-        {
-            printf("Koniec pracy KONSUMENTA!\n");
-            break;
-        }
+        towarKonsument->wyjmij = (towarKonsument->wyjmij + 1) % NBUF; // zmiana pozycji w buforze
         
         /*************************************************************************/
         
         V_sem_post(prod); // podnies semafor Producenta
     } // end while
+
+   
     
     if (close(fd) == -1) // zamknieciie pliku do pisania
         {
@@ -81,6 +91,6 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
     zwolnij_zasoby_semafora(kons);
     zamknij_pamiec_dzielona(sm_fd);
 
-    
+    printf("Koniec pracy KONSUMENTA!\n");
     return 0;
 }
