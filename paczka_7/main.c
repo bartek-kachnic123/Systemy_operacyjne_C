@@ -109,6 +109,9 @@ int main(int argc, char *argv[]) // 1-producent, 2-konsument, 3-dane, 4- wyniki
         exit(1);
     }
 
+    zwolnij_zasoby_semafora(prod);
+    zwolnij_zasoby_semafora(kons);
+
     zamknij_pamiec_dzielona(sm_fd);
     exit(0);
 }
