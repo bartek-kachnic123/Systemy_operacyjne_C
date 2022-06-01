@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) // 1- SEMAFOR PROD, 2-SEMAFOR KONS, 3-PAMIEC DZ
     int fd; // deskryptor dla pliku
     fd = open(argv[4], O_RDONLY); // otwarcie pliku do czytania
     int ile_bajt; // ile bajtow pobrano
+    towarProducent->wstaw = 0;
     while(1)
     {
         P_sem_wait(prod); // opusc semafor Producenta
