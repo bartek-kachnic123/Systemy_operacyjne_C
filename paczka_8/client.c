@@ -1,13 +1,25 @@
+
+/*
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 01.06.2022
+
+    Program otwiera kolejke servera, po czym prosi o podanie dzialania,
+    ktore zostanie wyslane do servera. Po otrzymaniu odpowiedzi wypisuje
+    ja na ekranie.
+      
+========================================================================
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include "mqueue_biblio.h"
-#define NBUF 40
+#define NBUF 50
 
+//====================================
 mqd_t *ptr_mq_server_des;
 mqd_t *ptr_mq_client_des;
 char *ptr_client_queue_name;
-void exit_handler()
+void exit_handler() // funkcja wykonujaca sie przed zakonczeniem programu
 {
     // zamkniecie kolejki serwera
     close_mqueue(*ptr_mq_server_des);
@@ -18,11 +30,12 @@ void exit_handler()
     // usuniecie kolejki klienta
     unlink_mqueue(ptr_client_queue_name);
 }
-
-void sig_handler(int num)
+//====================================
+void sig_handler(int num) // sygnal sigint
 {
     exit(0);
 }
+//====================================
 
 int main(int argc, char *argv[])
 {
@@ -39,8 +52,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    char bufor[NBUF]; // bufor dla dla  dzialania
-    char client_queue_name[NBUF]; // nazwa kolejki klienta
+    char bufor[NBUF]; // bufor dla   dzialania
+    char client_queue_name[MQ_MSGSIZE-NBUF]; // nazwa kolejki klienta
     char msg[MQ_MSGSIZE]; // bufor dla wiadomosci gotowej do wyslania
 
     // sklejanie nazwy kolejki / + pid
@@ -60,7 +73,9 @@ int main(int argc, char *argv[])
     // wypisanie wlasciwosci kolejki:
     printf("Nazwa kolejki: %s, deskryptor: %d oraz atrybuty:\n", client_queue_name, mq_client_des);
     printf("flags: %ld, maxmsg: %ld, maxsize: %ld, curmsgs: %ld!\n", attr.mq_flags, attr.mq_maxmsg, attr.mq_msgsize, attr.mq_curmsgs);
+
     sleep(1); // czekanie na serwer
+    
     
     mqd_t mq_server_des; // deskryptor kolejki serwera
     ptr_mq_server_des = &mq_server_des;
@@ -81,23 +96,12 @@ int main(int argc, char *argv[])
         // wyslanie wiadomosci
         send_msg(mq_server_des, msg, MQ_MSGSIZE, 1);
 
-        
-
         // odbieranie wiadomosci z serwera
         receive_msg(mq_client_des, msg, MQ_MSGSIZE);
         printf("Message from server : %s \n", msg);
-        
-        
-
 
     }
     printf("Koniec!\n");
-
-    
-    
-
-
-
 
     exit(0);
 }
