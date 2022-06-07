@@ -9,7 +9,7 @@ Katalog paczka_8 zawiera X programy w  jezyku C:
 --------------------------------------------------------------------
 
 I.      Program realizuje realizuje problem Serwera i wielu klientow
-       za pomoca kolejki. Klient wysyla komunikat z dzialniem do serwera,
+       za pomoca kolejki standardu POSIX. Klient wysyla komunikat z dzialniem do serwera,
        a serwer po odpowiednim czasie wysyla wynik do klienta.
        
        Program sklada sie z 3 plikow w jezyku c i 1 modul:
