@@ -1,118 +1,139 @@
 #define _REENTRANT
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <pthread.h>
-#define NUM_OF_THREAD 5 // dodac do arg programow
-#define NUM_SECTIONS 5 // to tez
-#define XMAX 100     // Maksymalna liczba kolumn ekranu 
-#define YMAX 50     // Maksymalna liczba wierszy ekranu
+#define XRIGHT 100     // odleglosc wyswietlania po prawej stronie
 
 
+pthread_mutex_t Mutex; 
 int mutual_var; // wspolna zmienna
-
-typedef struct
-{
-  pthread_mutex_t *mutex;
-  unsigned num_sections;
-  int id;
-}Pthread_args;
-
+int y_down = -1;
+const int *n_sections_ptr;
 
 void gotoxy(unsigned x, unsigned y)
 {
-  
-  printf("\033[%d;%dH\033[", y, x);
+  printf("\033[%d;%dH", y, x);
 }
-void * pthread_fun(void *pthread_args)
+void * pthread_fun(void *id_pthread)
 {
   sleep(4);
-  Pthread_args *args = (Pthread_args *) pthread_args;
+  int id = *(int *) id_pthread; // id watku
+  int errnum; // kod bledu
   int private_var = 0; // prywatna zmienna
   
   int i; // iteracja petli
-  for (i = 0; i < args->num_sections; ++i) // sekcja prywatna
+  int t; // czas w sekundach
+  srand(id); // ustawienie losowego czasu w zal. od id
+  t = rand() % 5 + 2; // losowy czas od 2 do 6 sekund
+  
+  for (i = 0; i < *n_sections_ptr; ++i)
   {
+    printf("Nr watku %d i jego sekcji prywatnej %d!\n", id, i+1);
+    y_down++;
+    sleep(t); // czekanie
     
-    printf("Nr watku %d i jego sekcji prywatnej %d!\n", args->id, i+1);
-    sleep(1);
-  }
-  for (i = 0; i < args->num_sections; ++i)
-  {
-    // gotoxy(1, i*3);
-    // printf("NNr watku %ld i jego sekcji prywatnej %d!\n", num_pth, i+1);
     
-
-    pthread_mutex_lock(args->mutex);
+    errnum = pthread_mutex_lock(&Mutex);
+    if (errnum)
+    {
+      printf("%s", strerror(errnum));
+      pthread_exit(NULL);
+    }
     //=======================================================
     // SEKCJA KRYTYCZNA:
+    gotoxy(XRIGHT, 0); // przesuniecie kursora na prawo
+    printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id,i+1, mutual_var);
+    printf("\033[%dB", y_down);
+
     private_var = mutual_var;
     private_var++;
-    sleep(2);
+
+    sleep(t); // czekanie
     mutual_var = private_var;
-    gotoxy(XMAX, 0);
-    printf("NNr watku %d i nr sekcji krytycznej: %d!\n", args->id,i+1);
-    
-    
-    pthread_mutex_unlock(args->mutex);
-    
-    
+
+    errnum = pthread_mutex_unlock(&Mutex);
+    if (errnum)
+    {
+      printf("%s", strerror(errnum));
+      pthread_exit(NULL);
+    }
     //=======================================================
   }
-  free(args); // dealokacja pamieci
+  free(id_pthread); // dealokacja pamieci
   pthread_exit(NULL);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-  pthread_mutex_t Mutex = PTHREAD_MUTEX_INITIALIZER; // stworzenie i inicjalizacja mutexu
   int i; // iteracja petli
-  pthread_t pthread_ids[NUM_OF_THREAD]; // tablica id watkow
+  int errnum; // kod bledu
+  const int n_pthreads = atoi(argv[1]); // ilosc watkow
+  const int n_sections = atoi(argv[2]); // ilosc sekcji prywatnych / krytycznych
+  n_sections_ptr = &n_sections;
+
+  errnum = pthread_mutex_init(&Mutex, NULL); //  Inicjalizacja Mutexu
+  if (errnum)
+  {
+    printf("%s", strerror(errnum));
+    exit(EXIT_FAILURE);
+  }
+
+  pthread_t pthread_ids[n_pthreads]; // tablica id watkow
   
   // Wypisanie adresu Mutexu
   printf("Adres Mutexu: %p!\n", (void*) &Mutex);
-  // tworzenie struktrury dla argumentow watkow i ich inizalizacja
   
   
-  for (i = 0; i < NUM_OF_THREAD; ++i)
+  
+  for (i = 0; i < n_pthreads; ++i)
   {
-    Pthread_args *ptr_args = malloc(sizeof(Pthread_args));
-    ptr_args->mutex = &Mutex;
-    ptr_args->num_sections = NUM_SECTIONS;
-    ptr_args->id = i+1;
-
-
-    pthread_create(&pthread_ids[i],NULL, pthread_fun, (void*)ptr_args);
+    int *id = malloc(sizeof(int));
+    *id = i+1;
+    errnum = pthread_create(&pthread_ids[i],NULL, pthread_fun, (void*) id); // tworzenie watkow
+    if (errnum)
+    {
+      printf("%s", strerror(errnum));
+      exit(EXIT_FAILURE);
+    }
     
     // Wypisanie nr watku i jego id
     printf("Watek nr %d o id %ld!\n", i+1, pthread_ids[i]);
   }
-  sleep(3);
+  
+  for (i = 3; i > 0; --i)
+  {
+    printf("Czyszczenie ekranu za %d!\n", i);
+    sleep(1);
+  }
   if (system("clear") == -1)
   {
     perror("system clear error");
     exit(1);
   }
-  for (i = 0; i < NUM_OF_THREAD; ++i)
+  for (i = 0; i < n_pthreads; ++i)
   {
-    pthread_join(pthread_ids[i], NULL); // czekanie na watki
+    errnum = pthread_join(pthread_ids[i], NULL); // czekanie na watki
+    if (errnum)
+    {
+      printf("%s", strerror(errnum));
+      exit(EXIT_FAILURE);
+    }
   }
 
-  gotoxy(0, YMAX); // przesuniecie kursora na dol
-  if (mutual_var == NUM_OF_THREAD*NUM_SECTIONS)
+  gotoxy(0, y_down+2); // przesuniecie kursora na dol
+  if (mutual_var == n_pthreads*n_sections)
   {
-    printf("LLicznik jest poprawny i wynosi %d!\n", mutual_var);
+    printf("Licznik jest poprawny i wynosi %d!\n", mutual_var);
   }
   else 
   {
-    printf("LLicznik jest niepoprawny i wynosi %d!\n", mutual_var);
+    printf("Licznik jest niepoprawny i wynosi %d!\n", mutual_var);
   }
   
   pthread_mutex_destroy(&Mutex); // usuniecie mutexu
-
-
-
-
 
   return 0;
 }

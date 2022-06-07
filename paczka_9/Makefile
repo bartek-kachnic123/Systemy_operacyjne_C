@@ -5,6 +5,9 @@ DIR = $(notdir $(CURDIR))
 SYSNAME = $(shell uname -s)
 # Nazwy plikow
 NAME1 = main
+# Dane do uruchomienia programu:
+LICZBA_WATKOW = 4
+LICZBA_SEKCJI = 3
 # Objects file:
 OBJS1 = $(NAME1).o
 # Pliki wykonawcze
@@ -34,7 +37,7 @@ $(EXEC1): $(OBJS1)
 .PHONY: run1
 # Uruchomienie programu
 run1: $(EXEC1)
-	./$(EXEC1)
+	./$(EXEC1) $(LICZBA_WATKOW) $(LICZBA_SEKCJI)
 
 ###############################################################################
 # Sprzataczka (tez "phony target")
