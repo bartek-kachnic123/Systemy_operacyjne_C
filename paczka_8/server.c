@@ -115,6 +115,7 @@ int main()
             }
             else 
             {
+                is_operator = 1; // resest ustawienia
                 sprintf(msg, "Operator nie znajduje sie w zbiorze dostepnych operacji {+,-,*,/}\n");
             }
         }
