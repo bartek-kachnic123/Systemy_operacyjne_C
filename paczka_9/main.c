@@ -2,9 +2,10 @@
 ========================================================================
 Autor: Bartłomiej Kachnic,                           Krakow, 08.06.2022
 
-    Program tworzy X watkow standardu POSIX, ktorych liczba jest podana
-     w argumentach programu.Nastepenie wypisuje nr watku i nr 
-     odpowiedniej sekcji prywatnej lub krytycznej, a takze licznik globalny.
+    Program realizuje wzajmne wykluczanie P-watkow standardu POSIX,
+        tworzy X watkow, ktorych liczba jest podana w argumentach programu.
+        Nastepenie wypisuje nr watku i nr odpowiedniej sekcji prywatnej lub 
+        krytycznej, a takze licznik globalny.
       
 ========================================================================
 */

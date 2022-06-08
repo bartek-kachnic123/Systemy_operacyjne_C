@@ -8,9 +8,10 @@ Autor: Bartłomiej Kachnic,                           Krakow, 08.06.2022
 Katalog paczka_9 zawiera X programy w  jezyku C:
 --------------------------------------------------------------------
 
-I.       Program tworzy X watkow standardu POSIX, ktorych liczba jest podana
-     w argumentach programu.Nastepenie wypisuje nr watku i nr odpowiedniej 
-     sekcji prywatnej lub krytycznej, a takze licznik globalny.
+I.       Program realizuje wzajmne wykluczanie P-watkow standardu POSIX,
+        tworzy X watkow, ktorych liczba jest podana w argumentach programu.
+        Nastepenie wypisuje nr watku i nr odpowiedniej sekcji prywatnej lub 
+        krytycznej, a takze licznik globalny.
        
        Program sklada sie z 1 pliku w jezyku c.
             1) main.c - program glowny
