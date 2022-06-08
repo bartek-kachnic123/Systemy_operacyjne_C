@@ -1,0 +1,48 @@
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 08.06.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog paczka_9 zawiera X programy w  jezyku C:
+--------------------------------------------------------------------
+
+I.       Program tworzy X watkow standardu POSIX, ktorych liczba jest podana
+     w argumentach programu.Nastepenie wypisuje nr watku i nr odpowiedniej 
+     sekcji prywatnej lub krytycznej, a takze licznik globalny.
+       
+       Program sklada sie z 1 pliku w jezyku c.
+            1) main.c - program glowny
+            
+             
+
+    
+
+------------------------------------------------------------------------
+
+* Jak uruchomic programy:
+=========================
+
+Katalog zawiera program Makefile do kompilacji, linkowania
+i uruchamiania powyzszych programow, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+   a) dla biblioteki statycznej (static library; patrz Makefile):
+      make run1
+  
+
+       
+
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
