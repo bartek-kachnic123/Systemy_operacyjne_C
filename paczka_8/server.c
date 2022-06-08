@@ -62,9 +62,9 @@ int main()
     char msg[MQ_MSGSIZE]; // wiadomosc 
     mqd_t mq_client_desc; // deskryptor kolejki klienta
     char client_pid[20]; // pid klienta
-    int num1, num2;  // liczba pobrana z komunikatu
+    float num1, num2;  // liczba pobrana z komunikatu
     char operator; // {+,-,*,/}
-    int result; // wynik dzialania
+    float result; // wynik dzialania
     int is_operator = 1; // 1 - operator jest w zbiorze {+,-,*,/}
     while(1)
     {
@@ -76,14 +76,14 @@ int main()
         fflush(stdout);
 
         // wyciaganie danych z wiadomosci
-        if (sscanf(msg,"%s %d %c %d", client_pid, &num1, &operator, &num2) != 4)
+        if (sscanf(msg,"%s %g %c %g", client_pid, &num1, &operator, &num2) != 4)
         {
             sprintf(msg, "Zle wprowadzone dzialanie!\n");
         }
         else 
         {
         // obliczanie wyniku
-        if (operator == '/' && num2 == 0) // dzielenie przez 0;
+        if (operator == '/' && num2 == 0.0) // dzielenie przez 0;
         {
             sprintf(msg, "Nie wolno dzielic przez 0!\n");
         }
@@ -110,7 +110,7 @@ int main()
 
             if (is_operator)
             {
-                sprintf(msg, "Result: %d\n", result);
+                sprintf(msg, "Result: %g\n", result);
                 
             }
             else 
