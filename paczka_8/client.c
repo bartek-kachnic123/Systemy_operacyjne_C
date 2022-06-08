@@ -43,13 +43,13 @@ int main(int argc, char *argv[])
     if (atexit(exit_handler) != 0) // rejestracja funkcji atexit
     {
         perror("atexit error");
-        exit(2);
+        _exit(2);
     }
 
     if (signal(SIGINT, sig_handler) == SIG_ERR) // rejestracja funckji obslugujacej syganl SIGINT
     {
         perror("signal sigint error");
-        exit(1);
+        _exit(1);
     }
 
     char bufor[NBUF]; // bufor dla   dzialania
