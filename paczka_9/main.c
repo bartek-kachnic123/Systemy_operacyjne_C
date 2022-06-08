@@ -1,3 +1,14 @@
+/*
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 08.06.2022
+
+    Program tworzy X watkow standardu POSIX, ktorych liczba jest podana
+     w argumentach programu.Nastepenie wypisuje nr watku i nr 
+     odpowiedniej sekcji prywatnej lub krytycznej, a takze licznik globalny.
+      
+========================================================================
+*/
+
 #define _REENTRANT
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,13 +21,17 @@
 
 pthread_mutex_t Mutex; 
 int mutual_var; // wspolna zmienna
-int y_down = -1;
+int y_down = -1; // o ile pozycji w dol
 const int *n_sections_ptr;
 
+//========================================================================
+// funkcja gotoxy ustawia kursor na wspolrzednych x, y ( w terminalu);
 void gotoxy(unsigned x, unsigned y)
 {
   printf("\033[%d;%dH", y, x);
 }
+//========================================================================
+// funkcja dla watkow
 void * pthread_fun(void *id_pthread)
 {
   sleep(4);
@@ -46,7 +61,7 @@ void * pthread_fun(void *id_pthread)
     // SEKCJA KRYTYCZNA:
     gotoxy(XRIGHT, 0); // przesuniecie kursora na prawo
     printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id,i+1, mutual_var);
-    printf("\033[%dB", y_down);
+    printf("\033[%dB", y_down); // przesuniecie kursora  w dol o y_down pozycji
 
     private_var = mutual_var;
     private_var++;
@@ -65,6 +80,7 @@ void * pthread_fun(void *id_pthread)
   free(id_pthread); // dealokacja pamieci
   pthread_exit(NULL);
 }
+//========================================================================
 
 int main(int argc, char *argv[])
 {
@@ -123,8 +139,10 @@ int main(int argc, char *argv[])
     }
   }
 
+
   gotoxy(0, y_down+2); // przesuniecie kursora na dol
-  if (mutual_var == n_pthreads*n_sections)
+
+  if (mutual_var == n_pthreads*n_sections) // sprawdzenie wyniku
   {
     printf("Licznik jest poprawny i wynosi %d!\n", mutual_var);
   }
