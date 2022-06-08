@@ -17,12 +17,14 @@ Autor: Bartłomiej Kachnic,                           Krakow, 08.06.2022
 #include <unistd.h>
 #include <pthread.h>
 #define XRIGHT 100     // odleglosc wyswietlania po prawej stronie
+#define XLEFT 0        // wyswietlanie po lewej stronie
+#define CLEAR_TIME 5 // czas do wyczyszczenia ekranu
 
 
-pthread_mutex_t Mutex; 
+pthread_mutex_t Mutex;  // Mutex do synchronizacji
 int mutual_var; // wspolna zmienna
-int y_down = -1; // o ile pozycji w dol
 const int *n_sections_ptr;
+const int *n_pthreads_ptr;
 
 //========================================================================
 // funkcja gotoxy ustawia kursor na wspolrzednych x, y ( w terminalu);
@@ -34,45 +36,50 @@ void gotoxy(unsigned x, unsigned y)
 // funkcja dla watkow
 void * pthread_fun(void *id_pthread)
 {
-  sleep(4);
+  sleep(CLEAR_TIME+1);
   int id = *(int *) id_pthread; // id watku
   int errnum; // kod bledu
   int private_var = 0; // prywatna zmienna
+  int posY; // pozycja kursora dla dlugosci Y
   
   int i; // iteracja petli
   int t; // czas w sekundach
   srand(id); // ustawienie losowego czasu w zal. od id
-  t = rand() % 5 + 2; // losowy czas od 2 do 6 sekund
+  t = rand() % 4 + 3; // losowy czas od 3 do 6 sekund
   
   for (i = 0; i < *n_sections_ptr; ++i)
   {
-    printf("Nr watku %d i jego sekcji prywatnej %d!\n", id, i+1);
-    y_down++;
+    posY = (i * 4) + id; // obliczanie wartosci Y na podstawie id i ilosci watkow
+
     sleep(t); // czekanie
-    
+    gotoxy(0, posY);
+    printf("Nr watku %d i jego sekcji prywatnej %d!\n", id, i+1);
     
     errnum = pthread_mutex_lock(&Mutex);
     if (errnum)
     {
       printf("%s", strerror(errnum));
+      free(id_pthread);
       pthread_exit(NULL);
     }
     //=======================================================
     // SEKCJA KRYTYCZNA:
-    gotoxy(XRIGHT, 0); // przesuniecie kursora na prawo
-    printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id,i+1, mutual_var);
-    printf("\033[%dB", y_down); // przesuniecie kursora  w dol o y_down pozycji
-
+    
     private_var = mutual_var;
     private_var++;
 
+    t = rand() % 5 + 1; // losowy czas od 1 do 5 sekund
     sleep(t); // czekanie
     mutual_var = private_var;
+
+    gotoxy(XRIGHT, posY);
+    printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id,i+1, mutual_var);
 
     errnum = pthread_mutex_unlock(&Mutex);
     if (errnum)
     {
       printf("%s", strerror(errnum));
+      free(id_pthread);
       pthread_exit(NULL);
     }
     //=======================================================
@@ -89,6 +96,7 @@ int main(int argc, char *argv[])
   const int n_pthreads = atoi(argv[1]); // ilosc watkow
   const int n_sections = atoi(argv[2]); // ilosc sekcji prywatnych / krytycznych
   n_sections_ptr = &n_sections;
+  n_pthreads_ptr = &n_pthreads;
 
   errnum = pthread_mutex_init(&Mutex, NULL); //  Inicjalizacja Mutexu
   if (errnum)
@@ -101,8 +109,6 @@ int main(int argc, char *argv[])
   
   // Wypisanie adresu Mutexu
   printf("Adres Mutexu: %p!\n", (void*) &Mutex);
-  
-  
   
   for (i = 0; i < n_pthreads; ++i)
   {
@@ -119,16 +125,18 @@ int main(int argc, char *argv[])
     printf("Watek nr %d o id %ld!\n", i+1, pthread_ids[i]);
   }
   
-  for (i = 3; i > 0; --i)
+  for (i = CLEAR_TIME; i > 0; --i) // odliczanie
   {
     printf("Czyszczenie ekranu za %d!\n", i);
     sleep(1);
   }
-  if (system("clear") == -1)
+
+  if (system("clear") == -1) // czyszczenie ekranu
   {
     perror("system clear error");
     exit(1);
   }
+
   for (i = 0; i < n_pthreads; ++i)
   {
     errnum = pthread_join(pthread_ids[i], NULL); // czekanie na watki
@@ -139,8 +147,7 @@ int main(int argc, char *argv[])
     }
   }
 
-
-  gotoxy(0, y_down+2); // przesuniecie kursora na dol
+  gotoxy(XRIGHT/2, n_sections*n_pthreads+1); // przesuniecie kursora na dolny srodek
 
   if (mutual_var == n_pthreads*n_sections) // sprawdzenie wyniku
   {
