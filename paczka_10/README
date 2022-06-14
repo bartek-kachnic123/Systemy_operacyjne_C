@@ -1,0 +1,47 @@
+========================================================================
+Autor: Bartłomiej Kachnic,                           Krakow, 14.06.2022
+========================================================================
+
+* Zawartosc:
+============
+
+Katalog paczka_10 zawiera X programy w  jezyku C:
+--------------------------------------------------------------------
+
+I.     Program realizuje wzajmne wykluczanie P-watkow standardu POSIX
+              za pomoca algorytmu piekarni Leslie Laporta.
+
+       Program sklada sie z 1 pliku w jezyku c.
+            1) main.c - program glowny
+            
+             
+
+    
+
+------------------------------------------------------------------------
+
+* Jak uruchomic programy:
+=========================
+
+Katalog zawiera program Makefile do kompilacji, linkowania
+i uruchamiania powyzszych programow, a takze czyszczenia katalogu 
+i jego archiwizacji.
+
+-> Aby uruchomic 1-szy program, nalezy wykonac komende:
+   a) dla biblioteki statycznej (static library; patrz Makefile):
+      make run1
+  
+
+       
+
+
+-> Aby wyczyscic zawartosc katalogu (usunac zbedne pliki), nalezy wykonac:
+       make clean
+
+-> W celu archiwizacji oraz kompresji katalogu nalezy wykonac:
+       make tar
+
+========================================================================
+
+
+
