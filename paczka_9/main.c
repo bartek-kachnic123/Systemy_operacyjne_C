@@ -50,7 +50,7 @@ void * pthread_fun(void *id_pthread)
   
   for (i = 0; i < *n_sections_ptr; ++i)
   {
-    posY = (i * 4) + id; // obliczanie wartosci Y na podstawie id i ilosci watkow
+    posY = (i * *n_pthreads_ptr) + id; // obliczanie wartosci Y na podstawie id i ilosci watkow
 
     sleep(t); // czekanie
     gotoxy(0, posY);
