@@ -53,7 +53,7 @@ void * pthread_fun(void *id_pthread)
     posY = (i * *n_pthreads_ptr) + id; // obliczanie wartosci Y na podstawie id i ilosci watkow
 
     sleep(t); // czekanie
-    gotoxy(0, posY);
+    gotoxy(XLEFT, posY);
     printf("Nr watku %d i jego sekcji prywatnej %d!\n", id, i+1);
     
     errnum = pthread_mutex_lock(&Mutex);

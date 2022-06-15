@@ -81,7 +81,7 @@ void * pthread_fun(void *id_pthread)
     choosing[id] = 0;
 
     sleep(t); // czekanie
-    gotoxy(0, posY);
+    gotoxy(XLEFT, posY);
     printf("Nr watku %d i jego sekcji prywatnej %d!\n", id+1, i+1);
 
     for (int j = 0; j < N_THREADS; j++)
