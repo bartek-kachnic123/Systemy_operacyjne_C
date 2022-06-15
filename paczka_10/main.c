@@ -82,7 +82,7 @@ void * pthread_fun(void *id_pthread)
 
     sleep(t); // czekanie
     gotoxy(0, posY);
-    printf("Nr watku %d i jego sekcji prywatnej %d!\n", id, i+1);
+    printf("Nr watku %d i jego sekcji prywatnej %d!\n", id+1, i+1);
 
     for (int j = 0; j < N_THREADS; j++)
     {
@@ -100,7 +100,7 @@ void * pthread_fun(void *id_pthread)
     mutual_var = private_var;
 
     gotoxy(XRIGHT, posY);
-    printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id,i+1, mutual_var);
+    printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id+1,i+1, mutual_var);
     number[id] = 0;
 
     //=======================================================
