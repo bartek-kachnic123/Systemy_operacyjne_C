@@ -56,13 +56,13 @@ void * pthread_fun(void *id_pthread)
     gotoxy(XLEFT, posY);
     printf("Nr watku %d i jego sekcji prywatnej %d!\n", id, i+1);
     
-    errnum = pthread_mutex_lock(&Mutex);
-    if (errnum)
-    {
-      printf("%s", strerror(errnum));
-      free(id_pthread);
-      pthread_exit(NULL);
-    }
+    // errnum = pthread_mutex_lock(&Mutex);
+    // if (errnum)
+    // {
+    //   printf("%s", strerror(errnum));
+    //   free(id_pthread);
+    //   pthread_exit(NULL);
+    // }
     //=======================================================
     // SEKCJA KRYTYCZNA:
     
@@ -76,13 +76,13 @@ void * pthread_fun(void *id_pthread)
     gotoxy(XRIGHT, posY);
     printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id,i+1, mutual_var);
 
-    errnum = pthread_mutex_unlock(&Mutex);
-    if (errnum)
-    {
-      printf("%s", strerror(errnum));
-      free(id_pthread);
-      pthread_exit(NULL);
-    }
+    // errnum = pthread_mutex_unlock(&Mutex);
+    // if (errnum)
+    // {
+    //   printf("%s", strerror(errnum));
+    //   free(id_pthread);
+    //   pthread_exit(NULL);
+    // }
     //=======================================================
   }
   free(id_pthread); // dealokacja pamieci

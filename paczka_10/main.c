@@ -84,11 +84,11 @@ void * pthread_fun(void *id_pthread)
     gotoxy(XLEFT, posY);
     printf("Nr watku %d i jego sekcji prywatnej %d!\n", id+1, i+1);
 
-    for (int j = 0; j < N_THREADS; j++)
-    {
-      while(choosing[j]); // czekanie
-      while(number[j] != 0 && compare_n(number, id, j)); // czekanie
-    }
+    // for (int j = 0; j < N_THREADS; j++)
+    // {
+    //   while(choosing[j]); // czekanie
+    //   while(number[j] != 0 && compare_n(number, id, j)); // czekanie
+    // }
     
     //=======================================================
     // SEKCJA KRYTYCZNA:
@@ -101,7 +101,7 @@ void * pthread_fun(void *id_pthread)
 
     gotoxy(XRIGHT, posY);
     printf("Nr watku %d i nr sekcji krytycznej: %d, Licznik: %d!\n", id+1,i+1, mutual_var);
-    number[id] = 0;
+    // number[id] = 0;
 
     //=======================================================
   } // endfor
