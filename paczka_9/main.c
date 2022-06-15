@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
       exit(EXIT_FAILURE);
     }
   }
-
+  sleep(1);
   gotoxy(XRIGHT/2, n_sections*n_pthreads+1); // przesuniecie kursora na dolny srodek
 
   if (mutual_var == n_pthreads*n_sections) // sprawdzenie wyniku
